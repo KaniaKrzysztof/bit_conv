@@ -58,3 +58,29 @@ test('filter out multipliers that can be applied to given number of bits', () =>
     expect(converter.filterFittingMultipliers(1024, converter.multipliers)).toStrictEqual(example);
 
 });
+
+test('convert from power based value', () => {
+    const eightBits = [
+        {amount: 8, unit: 'b', asPower: 3},
+        {amount: 1, unit: "B", asPower:0}
+    ].sort(sorter);
+    expect(converter.convertFromPower(3, "b")).toStrictEqual(eightBits);
+
+    const oneKiloBit = [
+        {amount: 1, unit: "kb", asPower:0},
+        {amount: 1024, unit: "b", asPower:10}, 
+        {amount: 128, unit: "B", asPower:7}, 
+        {amount: 16, unit: "W", asPower:4}
+    ].sort(sorter);
+    expect(converter.convertFromPower(10, "b")).toStrictEqual(oneKiloBit);
+
+    const fourKiloBytes = [
+        {amount: 32, unit: "kb", asPower:5},
+        {amount: 32768, unit: "b", asPower:15},
+        {amount: 4096, unit: "B", asPower:12}, 
+        {amount: 4, unit: "kB", asPower:2}, 
+        {amount: 512, unit: "W", asPower:9}
+    ].sort(sorter);
+    expect(converter.convertFromPower(12, "B")).toStrictEqual(fourKiloBytes);
+});
+

@@ -21,6 +21,8 @@ class converter {
            return -1;
        }
     }
+
+    static tryConvertTo
     
     static convertToBits(amount, unit){
         const convertedToBits = [this.multipliers, this.units].reduce(
@@ -56,6 +58,11 @@ class converter {
 
         return values.sort(this.sorter);
     };
+
+    static convertFromPower(power, unit) {
+        return converter.convertExplicit(Math.pow(2, power), unit);
+    };
+
 }
 
 
