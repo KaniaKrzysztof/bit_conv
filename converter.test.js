@@ -8,6 +8,9 @@ test('reduce amount by given unit', () => {
     expect(converter.reduceAmount(2, "MB", converter.multipliers)).toBe(2097152);
 });
 
+test('convert amount to bits', () => {
+    expect(converter.convertToBits(1, "B")).toBe(8);
+});
 
 test('covertion from explicit amount', () => {
     const eightBits = [
