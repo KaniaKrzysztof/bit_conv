@@ -14,6 +14,14 @@ class converter {
     ];
 
     
+    static convertToBits(amount, unit){
+        
+        const convertedToBits = [this.multipliers, this.units].reduce(
+                (previousAmount, currentSet) => converter.reduceAmount(previousAmount, unit, currentSet)
+            , amount);
+        return convertedToBits;
+    }
+
     static reduceAmount(amount, unit, set){
         const factor = set.find(m => unit.includes(m.name));
         if(typeof factor === 'undefined'){
@@ -23,6 +31,7 @@ class converter {
     }
 
     static convertExplicit(amount, unit) {
+        const amountOfBits = converter.convertToBits(amount, unit);
 
         const example = [
             {amount: 1, unit: "B", asPower:3}
