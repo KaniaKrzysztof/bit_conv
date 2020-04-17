@@ -5,11 +5,17 @@ test('reduce amount by given unit', () => {
     expect(converter.reduceAmount(16, "b", converter.multipliers)).toBe(16);
     expect(converter.reduceAmount(1, "kb", converter.multipliers)).toBe(1024);
     expect(converter.reduceAmount(1, "kW", converter.multipliers)).toBe(1024);
-    expect(converter.reduceAmount(2, "MB", converter.multipliers)).toBe(2097152);
+    expect(converter.reduceAmount(2, "MB", converter.multipliers)).toBe(2*1024*1024);
 });
 
 test('convert amount to bits', () => {
+    expect(converter.convertToBits(1, "b")).toBe(1);
     expect(converter.convertToBits(1, "B")).toBe(8);
+    expect(converter.convertToBits(1, "kb")).toBe(1024);
+    expect(converter.convertToBits(10, "kB")).toBe(10*1024*8);
+    expect(converter.convertToBits(3, "kW")).toBe(3*1024*8*8);
+    expect(converter.convertToBits(1, "MW")).toBe(1024*1024*8*8);
+
 });
 
 test('covertion from explicit amount', () => {
