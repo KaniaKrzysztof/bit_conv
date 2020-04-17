@@ -15,13 +15,11 @@ class converter {
     ];
 
     static sorter(a, b){
-        if(a.amount > b.amount){
-            return 1;
-        }else if(a.amount == b.amount){
-            return (a.unit > b.unit);
-        }else{
-            return -1;
-        }
+       if(a.amount < b.amount){
+           return 1;
+       }else{
+           return -1;
+       }
     }
     
     static convertToBits(amount, unit){
@@ -55,7 +53,8 @@ class converter {
                             };
                     })
             ).reduce((a, b) => a.concat(b));
-        return values.sort(converter.sorter);
+
+        return values.sort(this.sorter);
     };
 }
 

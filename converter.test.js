@@ -1,6 +1,12 @@
 const converter = require('./converter');
-
-const sorter = converter.sorter;
+const sorter = function(a, b){
+    if(a.amount < b.amount){
+        return 1;
+    }else{
+        return -1;
+    }
+ }
+ 
 test('reduce amount by given unit', () => {
     expect(converter.reduceAmount(16, "b", converter.multipliers)).toBe(16);
     expect(converter.reduceAmount(1, "kb", converter.multipliers)).toBe(1024);
@@ -15,7 +21,6 @@ test('convert amount to bits', () => {
     expect(converter.convertToBits(10, "kB")).toBe(10*1024*8);
     expect(converter.convertToBits(3, "kW")).toBe(3*1024*8*8);
     expect(converter.convertToBits(1, "MW")).toBe(1024*1024*8*8);
-
 });
 
 test('covertion from explicit amount', () => {
@@ -23,9 +28,6 @@ test('covertion from explicit amount', () => {
         {amount: 8, unit: 'b', asPower: 3},
         {amount: 1, unit: "B", asPower:0}
     ].sort(sorter);
-
-
-
     expect(converter.convertExplicit(8, "b")).toStrictEqual(eightBits);
 
     const oneKiloBit = [
