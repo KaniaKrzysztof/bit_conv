@@ -46,6 +46,14 @@ test('covertion from explicit amount', () => {
         {amount: 512, unit: "W", asPower:9}
     ].sort(sorter);
     expect(converter.convertExplicit(4, "kB")).toStrictEqual(fourKiloBytes);
+
+    // const nonstandardvalue = [
+    //     {amount: 3, unit: "kb", asPower: {amount: 3, power: 10}},
+    //     {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
+    //     {amount: 384, unit: "B", asPower: {amount: 3, power: 10}}
+    // ].sort(sorter);
+    // expect(converter.convertExplicit(3, "kb")).toStrictEqual(nonstandardvalue);
+
 });
 
 test('filter out multipliers that can be applied to given number of bits', () => {
@@ -56,6 +64,13 @@ test('filter out multipliers that can be applied to given number of bits', () =>
         {name: "", value: 1}
     ];
     expect(converter.filterFittingMultipliers(1024, converter.multipliers)).toStrictEqual(example);
+
+    const example1 = [
+        {name: "k", value: 1024},
+        {name: "M", value: 1024*1024},
+        {name: "", value: 1}
+    ];
+    expect(converter.filterFittingMultipliers(1024*1024, converter.multipliers)).toStrictEqual(example1);
 
 });
 
@@ -84,3 +99,27 @@ test('convert from power based value', () => {
     expect(converter.convertFromPower(12, "B")).toStrictEqual(fourKiloBytes);
 });
 
+
+
+
+
+test('detect power', () => {
+    const example = {amount: 3, power: 0}; // 3* 2^0 kb
+    expect(converter.detectPower(3*1024, {name: "b", value: 1}, {name: "k", value: 1024})).toStrictEqual(example);
+    
+    const example1 = {amount: 3, power: 10}; // 3 * 2^10 B
+    expect(converter.detectPower(24*1024, {name: "B", value: 8}, {name: "", value: 1})).toStrictEqual(example1);
+
+    const example1b = {amount: 3, power: 13}; // 3 * 2^13 b
+    expect(converter.detectPower(24*1024, {name: "b", value: 1}, {name: "", value: 1})).toStrictEqual(example1b);
+
+    const example2 = {amount: 3, power: 3}; // 3 * 2^3 Mb
+    expect(converter.detectPower(24*1024*1024, {name: "b", value: 1}, {name: "M", value: 1024*1024})).toStrictEqual(example2);
+
+    const example3 = {amount: 3, power: 7}; // 3 * 2^7 B
+    expect(converter.detectPower(3*1024, {name: "B", value: 8}, {name: "", value: 1})).toStrictEqual(example3);
+
+    const example4 = {amount: 5, power: 10}; // 5 * 2^10 kb
+    expect(converter.detectPower(5*1024*1024, {name: "b", value: 1}, {name: "k", value: 1024})).toStrictEqual(example4);
+
+});

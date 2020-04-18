@@ -2,9 +2,11 @@ class converter {
     constructor() {
         
     }
+    static K_STANDARD = 1024;
+
     static multipliers = [
-        {name: "k", value: 1024},
-        {name: "M", value: 1024*1024},
+        {name: "k", value: this.K_STANDARD},
+        {name: "M", value: this.K_STANDARD*this.K_STANDARD},
         {name: "", value: 1}
     ];
     
@@ -62,6 +64,28 @@ class converter {
     static convertFromPower(power, unit) {
         return converter.convertExplicit(Math.pow(2, power), unit);
     };
+
+    static detectPower(amountOfBits, unit, multi){
+        let asPower = Math.log2((amountOfBits/unit.value)/multi.value);
+        if(Number.isInteger(asPower)){
+            return asPower;
+        }else{
+            const bits = amountOfBits/multi.value;
+            
+            const bitsConvertedToUnit = bits/unit.value;
+
+            let power = 0;
+
+            while(Number.isInteger(bitsConvertedToUnit/Math.pow(2,power))){
+                power++;
+            }
+            
+
+            let am = bitsConvertedToUnit/Math.pow(2,power-1);
+            console.log("all bits = ", amountOfBits, ", bits = ", bits, ", conv = ", bitsConvertedToUnit, ", power = ", power, ", am = ", am);
+            return {amount: am, power: power-1};
+        }
+    }
 
 }
 
