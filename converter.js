@@ -13,7 +13,7 @@ class converter {
     static units = [
         {name: "b", value: 1},
         {name: "B", value: 8},
-        {name: "W", value: 64},
+        {name: "W", value: 16},
     ];
 
     static sorter(a, b){

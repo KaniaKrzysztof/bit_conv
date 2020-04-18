@@ -19,8 +19,8 @@ test('convert amount to bits', () => {
     expect(converter.convertToBits(1, "B")).toBe(8);
     expect(converter.convertToBits(1, "kb")).toBe(1024);
     expect(converter.convertToBits(10, "kB")).toBe(10*1024*8);
-    expect(converter.convertToBits(3, "kW")).toBe(3*1024*8*8);
-    expect(converter.convertToBits(1, "MW")).toBe(1024*1024*8*8);
+    expect(converter.convertToBits(16, "kW")).toBe(16*1024*16);
+    expect(converter.convertToBits(1, "MW")).toBe(1024*1024*16);
 });
 
 
@@ -76,7 +76,7 @@ test('convert from power based value', () => {
         {amount: 1, unit: "kb", asPower:0},
         {amount: 1024, unit: "b", asPower:10}, 
         {amount: 128, unit: "B", asPower:7}, 
-        {amount: 16, unit: "W", asPower:4}
+        {amount: 64, unit: "W", asPower:6}
     ].sort(sorter);
     expect(converter.convertFromPower(1, 10, "b")).toStrictEqual(oneKiloBit);
 
@@ -85,7 +85,8 @@ test('convert from power based value', () => {
         {amount: 32768, unit: "b", asPower:15},
         {amount: 4096, unit: "B", asPower:12}, 
         {amount: 4, unit: "kB", asPower:2}, 
-        {amount: 512, unit: "W", asPower:9}
+        {amount: 2048, unit: "W", asPower:11},
+        {amount: 2, unit: "kW", asPower:1}
     ].sort(sorter);
     expect(converter.convertFromPower(1, 12, "B")).toStrictEqual(fourKiloBytes);
 
@@ -93,7 +94,7 @@ test('convert from power based value', () => {
         {amount: 3, unit: "kb", asPower: {amount: 3, power: 0}},
         {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
         {amount: 384, unit: "B", asPower: {amount: 3, power: 7}},
-        {amount: 48, unit: "W", asPower: {amount: 3, power: 4}}
+        {amount: 192, unit: "W", asPower: {amount: 3, power: 6}}
     ].sort(sorter);
     expect(converter.convertFromPower(3, 0, "kb")).toStrictEqual(nonstandardvalue);
 });
@@ -109,7 +110,7 @@ test('convertion from explicit amount', () => {
         {amount: 1, unit: "kb", asPower:0},
         {amount: 1024, unit: "b", asPower:10}, 
         {amount: 128, unit: "B", asPower:7}, 
-        {amount: 16, unit: "W", asPower:4}
+        {amount: 64, unit: "W", asPower:6}
     ].sort(sorter);
     expect(converter.convertExplicit(1, "kb")).toStrictEqual(oneKiloBit);
 
@@ -118,7 +119,8 @@ test('convertion from explicit amount', () => {
         {amount: 32768, unit: "b", asPower:15},
         {amount: 4096, unit: "B", asPower:12}, 
         {amount: 4, unit: "kB", asPower:2}, 
-        {amount: 512, unit: "W", asPower:9}
+        {amount: 2048, unit: "W", asPower:11},
+        {amount: 2, unit: "kW", asPower:1}
     ].sort(sorter);
     expect(converter.convertExplicit(4, "kB")).toStrictEqual(fourKiloBytes);
 
@@ -126,7 +128,7 @@ test('convertion from explicit amount', () => {
         {amount: 3, unit: "kb", asPower: {amount: 3, power: 0}},
         {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
         {amount: 384, unit: "B", asPower: {amount: 3, power: 7}},
-        {amount: 48, unit: "W", asPower: {amount: 3, power: 4}}
+        {amount: 192, unit: "W", asPower: {amount: 3, power: 6}}
     ].sort(sorter);
     expect(converter.convertExplicit(3, "kb")).toStrictEqual(nonstandardvalue);
 
