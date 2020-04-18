@@ -70,7 +70,7 @@ test('convert from power based value', () => {
         {amount: 8, unit: 'b', asPower: 3},
         {amount: 1, unit: "B", asPower:0}
     ].sort(sorter);
-    expect(converter.convertFromPower(3, "b")).toStrictEqual(eightBits);
+    expect(converter.convertFromPower(1, 3, "b")).toStrictEqual(eightBits);
 
     const oneKiloBit = [
         {amount: 1, unit: "kb", asPower:0},
@@ -78,7 +78,7 @@ test('convert from power based value', () => {
         {amount: 128, unit: "B", asPower:7}, 
         {amount: 16, unit: "W", asPower:4}
     ].sort(sorter);
-    expect(converter.convertFromPower(10, "b")).toStrictEqual(oneKiloBit);
+    expect(converter.convertFromPower(1, 10, "b")).toStrictEqual(oneKiloBit);
 
     const fourKiloBytes = [
         {amount: 32, unit: "kb", asPower:5},
@@ -87,7 +87,15 @@ test('convert from power based value', () => {
         {amount: 4, unit: "kB", asPower:2}, 
         {amount: 512, unit: "W", asPower:9}
     ].sort(sorter);
-    expect(converter.convertFromPower(12, "B")).toStrictEqual(fourKiloBytes);
+    expect(converter.convertFromPower(1, 12, "B")).toStrictEqual(fourKiloBytes);
+
+    const nonstandardvalue = [
+        {amount: 3, unit: "kb", asPower: {amount: 3, power: 0}},
+        {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
+        {amount: 384, unit: "B", asPower: {amount: 3, power: 7}},
+        {amount: 48, unit: "W", asPower: {amount: 3, power: 4}}
+    ].sort(sorter);
+    expect(converter.convertFromPower(3, 0, "kb")).toStrictEqual(nonstandardvalue);
 });
 
 test('convertion from explicit amount', () => {

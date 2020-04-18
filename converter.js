@@ -23,8 +23,6 @@ class converter {
            return -1;
        }
     }
-
-    static tryConvertTo
     
     static convertToBits(amount, unit){
         const convertedToBits = [this.multipliers, this.units].reduce(
@@ -61,8 +59,9 @@ class converter {
         return values.sort(this.sorter);
     };
 
-    static convertFromPower(power, unit) {
-        return converter.convertExplicit(Math.pow(2, power), unit);
+    static convertFromPower(multiplier, power, unit) {
+        const am = multiplier * Math.pow(2, power);
+        return converter.convertExplicit(am, unit);
     };
 
     static detectPower(amountOfBits, unit, multi){
