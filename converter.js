@@ -5,8 +5,8 @@ class converter {
     static K_STANDARD = 1024;
 
     static multipliers = [
-        {name: "k", value: this.K_STANDARD},
-        {name: "M", value: this.K_STANDARD*this.K_STANDARD},
+        {name: "k", value: 1024},
+        {name: "M", value: 1024*1024},
         {name: "", value: 1}
     ];
     
@@ -53,7 +53,7 @@ class converter {
                         return {
                             amount: (amountOfBits/unit.value)/multi.value,
                             unit: multi.name + unit.name,
-                            asPower: Math.log2((amountOfBits/unit.value)/multi.value)
+                            asPower: this.detectPower(amountOfBits, unit, multi)
                             };
                     })
             ).reduce((a, b) => a.concat(b));
@@ -82,7 +82,7 @@ class converter {
             
 
             let am = bitsConvertedToUnit/Math.pow(2,power-1);
-            console.log("all bits = ", amountOfBits, ", bits = ", bits, ", conv = ", bitsConvertedToUnit, ", power = ", power, ", am = ", am);
+            // console.log("all bits = ", amountOfBits, ", bits = ", bits, ", conv = ", bitsConvertedToUnit, ", power = ", power, ", am = ", am);
             return {amount: am, power: power-1};
         }
     }

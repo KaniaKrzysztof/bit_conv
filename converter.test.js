@@ -47,12 +47,13 @@ test('covertion from explicit amount', () => {
     ].sort(sorter);
     expect(converter.convertExplicit(4, "kB")).toStrictEqual(fourKiloBytes);
 
-    // const nonstandardvalue = [
-    //     {amount: 3, unit: "kb", asPower: {amount: 3, power: 10}},
-    //     {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
-    //     {amount: 384, unit: "B", asPower: {amount: 3, power: 10}}
-    // ].sort(sorter);
-    // expect(converter.convertExplicit(3, "kb")).toStrictEqual(nonstandardvalue);
+    const nonstandardvalue = [
+        {amount: 3, unit: "kb", asPower: {amount: 3, power: 0}},
+        {amount: 3072, unit: "b", asPower: {amount: 3, power: 10}},
+        {amount: 384, unit: "B", asPower: {amount: 3, power: 7}},
+        {amount: 48, unit: "W", asPower: {amount: 3, power: 4}}
+    ].sort(sorter);
+    expect(converter.convertExplicit(3, "kb")).toStrictEqual(nonstandardvalue);
 
 });
 
