@@ -33,7 +33,7 @@
         <div class="form-group">
           <label class="col-md-5 control-label" for="numberRepresentation">Liczba jednostek</label>  
           <div class="col-md-1">
-          <input id="numberRepresentation" name="numberRepresentation" type="number", min = "1", value="1024", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+          <input id="numberRepresentation" name="numberRepresentation" type="number", min = "1", value="1024", step = "1", placeholder="Ilość" class="form-control input-md" required>
             
           </div>
         </div>
@@ -96,13 +96,13 @@
             <div class="col-2">
 
                 <label for="multiplier">Mnożnik x</label>  
-                <input id="multiplier" name="multiplier" type="number", min = "1", value="1", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+                <input id="multiplier" name="multiplier" type="number", min = "1", value="1", step = "1", placeholder="Ilość" class="form-control input-md" required>
               
             </div>
             <div class="col-2">
 
               <label for="power">2<sup>y</sup> </label>  
-              <input id="power" name="power" type="number", min = "0", value="10", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+              <input id="power" name="power" type="number", min = "0", value="10", step = "1", placeholder="Ilość" class="form-control input-md" required>
             
             </div>
             <div class="col-2">
@@ -162,11 +162,8 @@
           return row;
       }
 
-      function changeNumberRepresentation(){
+      function updateTable(amount, unit){
         let tableBody = $("#numberTableBody");
-
-        const amount = $("#numberRepresentation").val();
-        const unit = $("#numberRepresentationUnit").val();
 
         const result = converter.convertExplicit(amount, unit)
                       .map((rep, index) => getRowHtml(rep, index))
@@ -178,23 +175,39 @@
       }
 
       $("#numberRepresentation, #numberRepresentationUnit").change(function(){
+        
 
-        const amount = $("#numberRepresentation").val();
+        const amount = parseInt($("#numberRepresentation").val());
         const unit = $("#numberRepresentationUnit").val();
 
+        if(Number.isInteger(amount)){
         const convertToPower = converter.detectPower(converter.convertToBits(amount, unit),
                                                     converter.units.find(e => unit.includes(e.name)), 
                                                     converter.multipliers.find(e => unit.includes(e.name)));
-        console.log(convertToPower);
-
         
         let multi = $("#multiplier").val(Number.isInteger(convertToPower) ? 1 : convertToPower.amount);
         let power = $("#power").val(Number.isInteger(convertToPower) ? convertToPower : convertToPower.power);
         let powerUnit = $("#powerRepresentationUnit").val(unit);
 
+        updateTable(amount, unit);
+        }
+        return false;
+      });
 
 
-        changeNumberRepresentation();
+      $("#multiplier, #power, #powerRepresentationUnit").change(function(){
+        
+        let multi = parseInt($("#multiplier").val());
+        let power = parseInt($("#power").val());
+        let powerUnit = $("#powerRepresentationUnit").val();
+
+        if(Number.isInteger(multi) && Number.isInteger(power)){
+          const am = multi * Math.pow(2, power);
+          const amount = $("#numberRepresentation").val(am);
+          const unit = $("#numberRepresentationUnit").val(powerUnit);
+          
+          updateTable(am, powerUnit);
+        }
         return false;
       });
 
@@ -202,7 +215,7 @@
 
       
       $( document ).ready(function() {
-        $("#numberRepresentation, #numberRepresentationUnit").change();
+        $("#numberRepresentation").change();
       });
   </script>
   </body>
