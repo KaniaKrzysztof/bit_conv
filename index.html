@@ -13,6 +13,7 @@
 
     <!-- Custom styles for this template -->
     <link href="custom.css" rel="stylesheet">
+    <script src="converter.js"></script>
 
     
   </head>
@@ -20,6 +21,119 @@
   <body>
 
     <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-7">
+
+      <form class="form-inline">
+        
+        <!-- Form Name -->
+        <legend>Postać liczbowa</legend>
+        
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-5 control-label" for="numberRepresentation">Liczba jednostek</label>  
+          <div class="col-md-1">
+          <input id="numberRepresentation" name="numberRepresentation" type="number", min = "1", value="1024", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+            
+          </div>
+        </div>
+        
+        <!-- Select Basic -->
+        <div class="form-group">
+          <div class="col-md-1">
+            <select id="numberRepresentationUnit" name="numberRepresentationUnit" class="form-control">
+              <option value="b">b</option>
+              <option value="B">B</option>
+              <option value="W">W</option>
+              <option value="kb">kb</option>
+              <option value="kB">kB</option>
+              <option value="kW">kW</option>
+              <option value="Mb">Mb</option>
+              <option value="MB">MB</option>
+              <option value="MW">MW</option>
+            </select>
+          </div>
+        </div>
+
+         <!-- Button -->
+         <!-- <div class="form-group">
+          <div class="col-md-1">
+            <button id="convertNumberRepresentation" name="convertNumberRepresentation" class="btn btn-primary">Konwertuj</button>
+          </div>
+        </div> -->
+        
+        </form>
+      </div>
+
+      <div class="col-md-5">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Postać liczbowa</th>
+              <th scope="col">Postać potęgowa</th>
+            </tr>
+          </thead>
+          <tbody id="numberTableBody">
+            
+          </tbody>
+        </table>
+      </div>
+    </div>  
+
+    <div class = "row">
+      <div class="col-md-7">
+        <hr>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-7">
+        <legend>Postać potęgowa x * 2<sup>y</sup></legend>
+
+        <form>
+          <div class="form-row">
+            <div class="col-2">
+
+                <label for="multiplier">Mnożnik x</label>  
+                <input id="multiplier" name="multiplier" type="number", min = "1", value="1", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+              
+            </div>
+            <div class="col-2">
+
+              <label for="power">2<sup>y</sup> </label>  
+              <input id="power" name="power" type="number", min = "0", value="10", step = "1", placeholder="Ilość" class="form-control input-md" required="">
+            
+            </div>
+            <div class="col-2">
+              <label for="powerRepresentationUnit">jedn.</label>  
+
+              <select id="powerRepresentationUnit" name="powerRepresentationUnit" class="form-control">
+                <option value="b">b</option>
+                <option value="B">B</option>
+                <option value="W">W</option>
+                <option value="kb">kb</option>
+                <option value="kB">kB</option>
+                <option value="kW">kW</option>
+                <option value="Mb">Mb</option>
+                <option value="MB">MB</option>
+                <option value="MW">MW</option>
+              </select>
+            
+            </div>
+
+            <!-- <div class="col-2">
+              <label for="convertPowerRepresentation"></label>  
+
+              <button id="convertPowerRepresentation" name="convertPowerRepresentation" class="btn btn-primary">Konwertuj</button>
+
+            </div> -->
+
+          </div>
+        </form>
+      </div>
+    </div>
+
 
     </main>
     
@@ -28,5 +142,68 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+      function getRowHtml(representation, index){
+          let rowNumber = index;
+          let numberRepresentation = representation.amount + " "+ representation.unit;
+          let powerRepresentation = () => {
+            if(Number.isInteger(representation.asPower)){
+              return `2<sup>${representation.asPower}</sup> ${representation.unit}`;
+            }else{
+              return `${representation.asPower.amount}*2<sup>${representation.asPower.power}</sup> ${representation.unit}`;
+            }
+          };
+
+          let row = `<tr>
+              <th scope="row">${rowNumber}</th>
+              <td>${numberRepresentation}</td>
+              <td>${powerRepresentation()}</td>
+            </tr>`;
+          return row;
+      }
+
+      function changeNumberRepresentation(){
+        let tableBody = $("#numberTableBody");
+
+        const amount = $("#numberRepresentation").val();
+        const unit = $("#numberRepresentationUnit").val();
+
+        const result = converter.convertExplicit(amount, unit)
+                      .map((rep, index) => getRowHtml(rep, index))
+                      .reduce((allRows, row) => allRows.concat(row), "");
+        
+
+        $("#numberTableBody").html(result);  
+        return false;
+      }
+
+      $("#numberRepresentation, #numberRepresentationUnit").change(function(){
+
+        const amount = $("#numberRepresentation").val();
+        const unit = $("#numberRepresentationUnit").val();
+
+        const convertToPower = converter.detectPower(converter.convertToBits(amount, unit),
+                                                    converter.units.find(e => unit.includes(e.name)), 
+                                                    converter.multipliers.find(e => unit.includes(e.name)));
+        console.log(convertToPower);
+
+        
+        let multi = $("#multiplier").val(Number.isInteger(convertToPower) ? 1 : convertToPower.amount);
+        let power = $("#power").val(Number.isInteger(convertToPower) ? convertToPower : convertToPower.power);
+        let powerUnit = $("#powerRepresentationUnit").val(unit);
+
+
+
+        changeNumberRepresentation();
+        return false;
+      });
+
+      
+
+      
+      $( document ).ready(function() {
+        $("#numberRepresentation, #numberRepresentationUnit").change();
+      });
+  </script>
   </body>
 </html>
